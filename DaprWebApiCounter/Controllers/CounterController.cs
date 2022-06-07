@@ -10,6 +10,10 @@ public class CounterController : ControllerBase
 {
     private readonly string storeName = "statestore";
     private readonly string key = "counter";
+
+    private readonly string pubsubName = "pubsub";
+    private readonly string topicName = "counter";
+
     private readonly DaprClient _daprClient;
     private readonly ILogger<CounterController> _logger;
 
@@ -45,5 +49,18 @@ public class CounterController : ControllerBase
         counter.Value += 1;
         var saved = await counter.TrySaveAsync();
         return (saved, counter);
+    }
+
+    [Topic("pubsub", "counter")]
+    [HttpGet("sub")]
+    public void SubCounter(int counter)
+    {
+        _logger.LogInformation("Consuming: {}", counter);
+    }
+
+    [HttpPost("pub/{counter}")]
+    public void PubCounter(int counter, CancellationToken cancellationToken = default)
+    {
+        _daprClient.PublishEventAsync<int>(pubsubName, topicName, counter, cancellationToken: cancellationToken);
     }
 }

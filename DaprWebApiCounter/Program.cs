@@ -18,6 +18,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 
+app.UseCloudEvents();
+
 app.MapControllers();
+
+app.MapSubscribeHandler();
 
 app.Run();
