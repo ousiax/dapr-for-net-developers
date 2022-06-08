@@ -61,8 +61,8 @@ public class CounterController : ControllerBase
     }
 
     [Topic("pubsub", "counter")]
-    [HttpGet("sub")]
-    public void SubCounter(int counter)
+    [HttpPost("sub")]
+    public void SubCounter([FromBody] int counter)
     {
         _logger.LogInformation("Consuming: {}", counter);
     }
