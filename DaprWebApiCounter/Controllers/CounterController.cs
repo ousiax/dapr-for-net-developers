@@ -37,6 +37,15 @@ public class CounterController : ControllerBase
         return (saved, counter);
     }
 
+    [HttpPut()]
+    public async Task<(bool, StateEntry<int>)> PutStateCounterAsync([FromServices] DaprClient client, CancellationToken cancellationToken = default)
+    {
+        var counter = await client.GetStateEntryAsync<int>(storeName, key, cancellationToken: cancellationToken);
+        counter.Value *= 2;
+        var saved = await counter.TrySaveAsync();
+        return (saved, counter);
+    }
+
     [HttpGet("state")]
     public StateEntry<int> GetCounter([FromState("statestore", "counter")] StateEntry<int> counter)
     {
