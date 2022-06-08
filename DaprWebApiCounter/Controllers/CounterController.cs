@@ -70,6 +70,7 @@ public class CounterController : ControllerBase
     [HttpPost("pub/{counter}")]
     public void PubCounter(int counter, CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Publishing: {}", counter);
         _daprClient.PublishEventAsync<int>(pubsubName, topicName, counter, cancellationToken: cancellationToken);
     }
 }
