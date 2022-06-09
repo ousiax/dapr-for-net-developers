@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webapicounter
+  name: webapicounter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapicounter
+  template:
+    metadata:
+      labels:
+        app: webapicounter
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "webapicounter"
+        dapr.io/app-port: "5000"
+        dapr.io/sidecar-image:  "docker.io/daprio/daprd:1.7.4"
+    spec:
+      containers:
+        - name: dapr-webapi-counter
+          image: qqbuby/dapr-webapi-counter:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_URLS
+              value: http://+:5000
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webapicounter
+  name: webapicounter
+spec:
+  type: NodePort
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 32500
+  selector:
+    app: redis

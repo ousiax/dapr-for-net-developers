@@ -1,0 +1,7 @@
+namespace: dapr-webapi-counter
+resources:
+  - manifests/namespace.yaml
+  - manifests/redis.yaml
+  - manifests/webapi-counter.yaml
+  - manifests/components/pubsub.yaml
+  - manifests/components/statestore.yaml
