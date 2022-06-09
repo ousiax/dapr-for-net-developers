@@ -44,4 +44,4 @@ spec:
       targetPort: 5000
       nodePort: 32500
   selector:
-    app: redis
+    app: webapicounter
